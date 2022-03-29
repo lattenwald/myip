@@ -10,10 +10,11 @@
 -export([start/2, stop/1]).
 
 start(_StartType, _StartArgs) ->
+    Port = application:get_env(myip, port, 8080),
     Dispatch = cowboy_router:compile([{'_', [{"/", myip_handler, []}]}]),
     {ok, _} = cowboy:start_clear(
                 myip_http_listener,
-                [{port, 8080}],
+                [{port, Port}],
                 #{env => #{dispatch => Dispatch}}),
     myip_sup:start_link().
 
